@@ -73,8 +73,20 @@ def test_login_route_returns_jwt_refresh_token():
 
 def test_login_route_dont_send_token_on_failed_auth():
     response = client.post(
-        "/auth/login", json={"username": "dwayne", "password": "not-account-password"}
+        prefix + "/auth/login",
+        json={"username": "dwayne", "password": "not-account-password"},
     )
     json = response.json()
     assert not "token" in json
     assert not "refresh_token" in json
+
+
+def test_signup_route_active():
+    response = client.post(prefix + "/auth/signup")
+    assert testing.has_been_found(response)
+    assert testing.is_allowed_method(response)
+
+
+def test_signup_route_no_body_provided():
+    response = client.post(prefix + "/auth/signup")
+    assert testing.unprocessable_entity(response)
