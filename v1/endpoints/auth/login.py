@@ -3,7 +3,7 @@ from core.schemas.responses import TokenResponse, APIResponse
 from core.repositories import UserRepository
 from core.services.auth import HashService, TokenGenerationService
 from core.dependencies import user_repository, hash_service, token_generation_service
-from .models import Login
+from v1.endpoints.models import Login
 
 router = APIRouter(tags=["auth"])
 
