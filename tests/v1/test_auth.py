@@ -159,3 +159,19 @@ class TestSignup(BaseTest):
         assert data
         assert username == signup_data.get("username")
         assert email == signup_data.get("email")
+
+    def test_signup_two_times_same_email_error(self):
+        service.data = []
+        signup_data = {
+            "username": "michael",
+            "email": "michael@basking.com",
+            "password": "jordan",
+        }
+        # Performs a signup using a simple username and password
+        signup_response = client.post(prefix + "/auth/signup", json=signup_data)
+        # First response is ok
+        assert testing.is_response_ok(signup_response)
+        # Second response is not valid
+        signup_response = client.post(prefix + "/auth/signup", json=signup_data)
+        assert testing.is_conflict(signup_response)
+        assert len(service.get_all()) == 1

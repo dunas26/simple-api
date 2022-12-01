@@ -23,3 +23,7 @@ def not_found(res: Response):
 
 def unprocessable_entity(res: Response):
     return res.status_code == 422
+
+
+def is_conflict(res: Response):
+    return res.status_code == 409
