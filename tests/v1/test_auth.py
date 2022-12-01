@@ -38,10 +38,21 @@ def mock_user_repository():
     yield service
 
 
+def reset_data():
+    service.data = base_data
+
+
 app.dependency_overrides[user_repository] = mock_user_repository
 client: TestClient = TestClient(app)
 
-class TestLogin(testing.BaseTest):
+
+class BaseTest:
+    @fixture(autouse=True)
+    def before_each(self):
+        reset_data()
+
+
+class TestLogin(BaseTest):
     def test_login_route_is_active(self):
         response = client.post(prefix + "/auth/login")
         assert testing.has_been_found(response) and testing.is_allowed_method(response)
@@ -109,7 +120,7 @@ class TestLogin(testing.BaseTest):
         assert not "refresh_token" in json
 
 
-class TestSignup(testing.BaseTest):
+class TestSignup(BaseTest):
     def test_signup_route_active(self):
         response = client.post(prefix + "/auth/signup")
         assert testing.has_been_found(response)

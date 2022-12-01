@@ -27,4 +27,5 @@ class UserRepository(ConnectionMixin):
         return self.db.query(self.table).all()
 
     def add(self, user: User):
-        return self.db.add(user)
+        self.db.add(user)
+        self.db.commit()

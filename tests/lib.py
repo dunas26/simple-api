@@ -1,13 +1,6 @@
 from httpx import Response
 
 
-class BaseTest:
-    @fixture(autouse=True)
-    def before_each(self):
-        # Restore the service base data
-        service.data = base_data
-
-
 def is_allowed_method(res: Response):
     return res.status_code != 405
 
