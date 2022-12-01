@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status
 from v1.endpoints.models import Signup
 from core.models import User
@@ -19,6 +20,7 @@ def signup_request(
     # Gather the data from the body
     username = signup.username
     email = signup.email
+    created_at = datetime.today()
     # Hash the password using the hash service
     password = hash_service.hash_password(signup.password)
     # Verify an existing user
@@ -29,7 +31,9 @@ def signup_request(
             status_code=status.HTTP_409_CONFLICT,
         )
     # Add the user to the database
-    user_repository.add(User(username=username, email=email, password=password))
+    user_repository.add(
+        User(username=username, email=email, password=password, created_at=created_at)
+    )
     return {
         "msg": "User signup successful",
         "data": {"username": username, "email": email},

@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from fastapi.testclient import TestClient
 from pytest import fixture
 import tests.lib as testing
@@ -21,12 +22,14 @@ base_data = [
         username="dwayne",
         email="dwayne@rock.com",
         password=hashed("johnson"),
+        created_at=datetime.today(),
     ),
     User(
         id=2,
         username="david",
         email="david@sporting.com",
         password=hashed("beckham"),
+        created_at=datetime.today(),
     ),
 ]
 
@@ -175,3 +178,16 @@ class TestSignup(BaseTest):
         signup_response = client.post(prefix + "/auth/signup", json=signup_data)
         assert testing.is_conflict(signup_response)
         assert len(service.get_all()) == 1
+
+    def test_signup_test_that_date_is_current(self):
+        today = datetime.today()
+        json = {
+            "username": "michael",
+            "email": "michael@basking.com",
+            "password": "jordan",
+        }
+        response = client.post(prefix + "/auth/signup", json=json)
+        assert testing.is_response_ok(response)
+        user = service.get_by_email(email=json.get("email"))
+        assert user.created_at
+        assert abs(today - user.created_at).seconds < 1
