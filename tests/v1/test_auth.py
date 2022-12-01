@@ -39,7 +39,7 @@ def mock_user_repository():
 
 
 def reset_data():
-    service.data = base_data
+    service.data = [x for x in base_data]
 
 
 app.dependency_overrides[user_repository] = mock_user_repository
