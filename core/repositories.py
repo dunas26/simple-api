@@ -20,6 +20,9 @@ class UserRepository(ConnectionMixin):
     def get_by_username(self, username: str) -> User:
         return self.db.query(self.table).filter_by(username=username).first()
 
+    def get_by_email(self, email: str) -> User:
+        return self.db.query(self.table).filter_by(email=email).first()
+
     def get_all(self) -> list[User]:
         return self.db.query(self.table).all()
 
