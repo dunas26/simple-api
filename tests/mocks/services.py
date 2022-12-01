@@ -19,6 +19,12 @@ class MockUsersService:
                 return d
         return None
 
+    def get_by_email(self, email: str) -> User:
+        for d in self.data:
+            if d.email == email:
+                return d
+        return None
+
     def get_all(self) -> list[User]:
         return [x for x in self.data]
 
